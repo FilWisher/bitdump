@@ -4,7 +4,7 @@ Dump bittorrent messages from the network. Cannot (yet) handle encrypted
 bittorrent traffic.
 
 ```
-$ sudo go run bittorrent.go net.go
+$ sudo ./bitdump
 Unchoke
 Unchoke
 Handshake: BitTorrent protocol: 2D6C74304436302D40704AB020E11255678510A2 0000000000000000000000000000000000000000

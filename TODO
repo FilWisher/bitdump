@@ -1,0 +1,4 @@
+TODO
+
+o Associate IPs with Peer IDs and print alongside messages
+o Optionally decrypt if you know the infohash?

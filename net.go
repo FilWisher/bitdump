@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
-	"net"
-	"log"
 	"bytes"
 	"encoding/binary"
+	"fmt"
+	"log"
+	"net"
 )
 
 const (
@@ -85,54 +85,54 @@ func NewTCPHeader(data []byte) (*TCPHeader, error) {
 }
 
 func main() {
-    netaddr, err := net.ResolveIPAddr("ip4", "0.0.0.0")
-    if err != nil {
-	    log.Println(err)
-	    return
-    }
-    conn, err := net.ListenIP("ip4:tcp", netaddr)
-    if err != nil {
-	    log.Println(err)
-	    return
-    }
+	netaddr, err := net.ResolveIPAddr("ip4", "0.0.0.0")
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	conn, err := net.ListenIP("ip4:tcp", netaddr)
+	if err != nil {
+		log.Println(err)
+		return
+	}
 
-    for {
-	    buf := make([]byte, 4096)
-	    n, _, err := conn.ReadFrom(buf)
-	    if err != nil {
-		    fmt.Println(err)
-		    continue
-	    }
+	for {
+		buf := make([]byte, 4096)
+		n, _, err := conn.ReadFrom(buf)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
 
-	    tcphdr, err := NewTCPHeader(buf[:n])
-	    if err != nil {
-		    log.Println(err)
-		    continue
-	    }
+		tcphdr, err := NewTCPHeader(buf[:n])
+		if err != nil {
+			log.Println(err)
+			continue
+		}
 
-	    // No TCP payload
-	    length := n - (int(tcphdr.DataOffset) * 4)
-	    if length <= 0 {
-		    continue
-	    }
+		// No TCP payload
+		length := n - (int(tcphdr.DataOffset) * 4)
+		if length <= 0 {
+			continue
+		}
 
-	    // Offset larger than number of bytes read
-	    if int(tcphdr.DataOffset) * 4 >= n {
-		    continue
-	    }
+		// Offset larger than number of bytes read
+		if int(tcphdr.DataOffset)*4 >= n {
+			continue
+		}
 
-	    data := buf[int(tcphdr.DataOffset) * 4:n]
+		data := buf[int(tcphdr.DataOffset)*4 : n]
 
-	    hs, err := NewHandshake(data)
-	    if err == nil {
-		    fmt.Printf("handshake: %v\n", hs)
-	            continue
-	    }
+		hs, err := NewHandshake(data)
+		if err == nil {
+			fmt.Printf("%v\n", hs)
+			continue
+		}
 
-	    msg, err := NewMessage(data)
-	    if err != nil {
-	            continue
-	    }
-	    fmt.Printf("message: %v\n", msg)
-    }
+		msg, err := NewMessage(data)
+		if err != nil {
+			continue
+		}
+		fmt.Printf("%v\n", msg)
+	}
 }
